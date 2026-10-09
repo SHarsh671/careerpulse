@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: job-app-manager-local
+
+  datasource:
+    url: jdbc:h2:mem:job_app_manager;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+
+  flyway:
+    enabled: false
+
+app:
+  jwt:
+    secret: JobApplicationManagerPlatformSecretKeyMustBeAtLeast256BitsLongForHMACSHA256Security123456
+    expiration-ms: 86400000
+  cors:
+    allowed-origins: http://localhost:5173,http://localhost:3000
+

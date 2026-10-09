@@ -1,0 +1,41 @@
+# Compiled Java / Maven artifacts
+target/
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Maven Wrapper & Local Cache
+.mvn-bin/
+.m2/
+.tools/
+
+# Node & Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.npm-cache/
+
+# Logs & Environment variables
+*.log
+.env
+.env.local
+.env.*.local
+
+# IDE & Editor specific
+.idea/
+*.iml
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Maven Wrapper helper for local execution with workspace-scoped repository
+
+if [ -z "$JAVA_HOME" ]; then
+    if [ -d "/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home" ]; then
+        export JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home"
+    elif [ -x "/usr/libexec/java_home" ]; then
+        export JAVA_HOME="$(/usr/libexec/java_home 2>/dev/null)"
+    fi
+fi
+
+if [ -n "$JAVA_HOME" ]; then
+    export PATH="$JAVA_HOME/bin:$PATH"
+fi
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PARENT_DIR="$(cd "$DIR/.." && pwd)"
+LOCAL_REPO="$PARENT_DIR/.m2/repository"
+
+mkdir -p "$LOCAL_REPO"
+
+if command -v mvn >/dev/null 2>&1; then
+    MVN_CMD="mvn"
+elif [ -x "$PARENT_DIR/.tools/maven/bin/mvn" ]; then
+    MVN_CMD="$PARENT_DIR/.tools/maven/bin/mvn"
+elif [ -x "$DIR/.tools/maven/bin/mvn" ]; then
+    MVN_CMD="$DIR/.tools/maven/bin/mvn"
+else
+    echo "Error: Maven not found." >&2
+    exit 1
+fi
+
+exec "$MVN_CMD" -Dmaven.repo.local="$LOCAL_REPO" "$@"
