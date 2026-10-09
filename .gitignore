@@ -8,6 +8,8 @@ target/
 *.zip
 *.tar.gz
 *.rar
+hs_err_pid*
+replay_pid*
 
 # Maven Wrapper & Local Cache
 .mvn-bin/
@@ -39,3 +41,6 @@ dist-ssr/
 .DS_Store
 Thumbs.db
 
+# Miscellaneous Java tooling
+.ctxt
+.mtj.tmp/
