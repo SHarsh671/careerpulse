@@ -2,7 +2,11 @@
 
 A full-stack portfolio project for managing a job search, built with **Java 21**, **Spring Boot 3.3.x**, **PostgreSQL**, and **React 18 / Vite**.
 
-Includes **21 REST endpoints**, four JPA entities, JWT-based authentication, user-scoped data access, PostgreSQL migrations, Docker Compose, and automated backend tests.
+Includes **21 REST API operations**, four JPA entities, JWT-based authentication, user-scoped data access, PostgreSQL migrations, Docker Compose, and automated backend tests. The backend test suite has **56 passing tests** and **80.05% line coverage**.
+
+**Live site:** [careerpulse-web-zrkl.onrender.com](https://careerpulse-web-zrkl.onrender.com) · **API health:** [careerpulse-api-t17q.onrender.com/actuator/health](https://careerpulse-api-t17q.onrender.com/actuator/health) · **Source:** [github.com/SHarsh671/careerpulse](https://github.com/SHarsh671/careerpulse)
+
+The live app requires an account. Select **Sign up** to create one; there is no shared demo login. The API runs on Render's free plan and may take about a minute to wake after 15 minutes without traffic.
 
 ---
 
@@ -15,7 +19,7 @@ Includes **21 REST endpoints**, four JPA entities, JWT-based authentication, use
 6. [REST API Documentation](#rest-api-documentation)
 7. [Getting Started & Local Setup](#getting-started--local-setup)
 8. [Running with Docker Compose](#running-with-docker-compose)
-9. [Free Demo Deployment](#free-demo-deployment)
+9. [Live Deployment](#live-deployment)
 10. [Automated Testing](#automated-testing)
 11. [Environment Variables](#environment-variables)
 12. [CI/CD Pipeline](#cicd-pipeline)
@@ -52,7 +56,7 @@ Managing a software engineering job search across tens or hundreds of applicatio
   - Referential integrity: Prevents deletion of companies that have associated applications.
 - **Interview & Assessment Tracking**:
   - Track individual interview rounds linked to applications: `OA`, `PHONE`, `TECHNICAL`, `BEHAVIORAL`, `FINAL`.
-  - Record interviewers, scheduled dates/times, interview questions, and outcomes (`PASSED`, `FAILED`, `PENDING`).
+  - Record interviewers, scheduled dates/times, notes, and outcomes (`PASSED`, `FAILED`, `PENDING`).
   - Automatic cascade deletion: removing an application cleanly purges associated interview history.
 - **Dynamic Search, Filtering & Pagination**:
   - Filter applications by status, target company, and location.
@@ -143,7 +147,7 @@ graph TD
 | **Framework** | Spring Boot 3.3.4 (Spring Web, Spring Security 6, Spring Data JPA, Hibernate 6) |
 | **Authentication** | JWT (`io.jsonwebtoken:jjwt:0.12.5`), BCrypt |
 | **Validation** | Bean Validation / Hibernate Validator (`jakarta.validation`) |
-| **Database** | PostgreSQL 16 (Docker / production configuration), H2 (in-memory tests and local profile), Flyway migrations |
+| **Database** | PostgreSQL (Docker Compose uses version 16; hosted version depends on provider), H2 (in-memory tests and local profile), Flyway migrations |
 | **Build Tool** | Apache Maven 3.9+ |
 | **Frontend Framework**| React 18, React Router v6 |
 | **Frontend Build** | Vite 5 |
@@ -233,7 +237,7 @@ erDiagram
 | `POST` | `/api/companies` | Create a new target company | Yes |
 | `GET` | `/api/companies/{id}` | Get company by ID | Yes |
 | `PUT` | `/api/companies/{id}` | Update company details | Yes |
-| `DELETE` | `/api/companies/{id}` | Delete company (if no active applications) | Yes |
+| `DELETE` | `/api/companies/{id}` | Delete company if it has no associated applications | Yes |
 
 ### Job Applications (`/api/applications`)
 | Method | Endpoint | Description | Auth Required |
@@ -271,6 +275,8 @@ erDiagram
 
 ### Option A: Zero-Dependency Local Run (H2 In-Memory Mode)
 For quick local testing without setting up PostgreSQL:
+
+Open two terminals in the repository root and keep both running while you use the app.
 
 1. **Start the Backend**:
    ```bash
@@ -346,16 +352,26 @@ docker-compose down -v
 
 ---
 
-## Free Demo Deployment
+## Live Deployment
 
-The repository includes a Render Blueprint in `render.yaml` for a static React site and Dockerized Spring Boot API. The API connects to an external PostgreSQL database; Supabase's free PostgreSQL project is one option.
+The live application is hosted as a Render static site and Spring Boot web service, with PostgreSQL hosted separately on Supabase.
+
+- **Website:** [https://careerpulse-web-zrkl.onrender.com](https://careerpulse-web-zrkl.onrender.com)
+- **API health:** [https://careerpulse-api-t17q.onrender.com/actuator/health](https://careerpulse-api-t17q.onrender.com/actuator/health)
+- **GitHub repository:** [https://github.com/SHarsh671/careerpulse](https://github.com/SHarsh671/careerpulse)
+
+Create an account through the website's **Sign up** page to try the app. The project does not provide a shared demo account. Render's free API service spins down after 15 minutes without traffic; the first request after idle can take about a minute to wake. Supabase may pause Free Plan projects with low activity over a 7-day period. See [Render's free-plan limits](https://render.com/docs/free) and [Supabase's production checklist](https://supabase.com/docs/guides/deployment/going-into-prod).
+
+### Deploying your own copy
+
+The repository includes a Render Blueprint in `render.yaml` for the React static site and Dockerized Spring Boot API. The API needs an external PostgreSQL database; Supabase is one option.
 
 1. Push this repository to GitHub and create a Supabase project.
 2. In Supabase, open **Connect** and select the **Session pooler** connection. Render services use IPv4, while Supabase's direct connection on the free tier is IPv6; the session pooler is the compatible option. Convert the displayed `postgresql://...` connection into `jdbc:postgresql://<pooler-host>:5432/postgres?sslmode=require`. Set `DATABASE_USERNAME` to the pooler username shown by Supabase (usually `postgres.<project-ref>`) and `DATABASE_PASSWORD` to the database password.
 3. In Render, choose **New → Blueprint**, connect the GitHub repository, and let it read `render.yaml`. Supply the three database environment variables when prompted.
-4. The Blueprint creates `careerpulse-api` and `careerpulse-web`. Their names determine the URLs referenced in the Blueprint and in `CORS_ALLOWED_ORIGINS`; if you rename either service, update those values too.
+4. After creation, copy the actual service URLs shown in Render. Set the static site's `VITE_API_URL` to `<API URL>/api` and the API's `CORS_ALLOWED_ORIGINS` to the exact static-site origin. Render may append a suffix to service URLs, so use the URLs shown in your dashboard rather than assuming they match the service names.
 
-This setup is intended for a portfolio demo. Render's free web services sleep after 15 minutes without traffic and can take about a minute to wake. Supabase free projects can pause after a week of low activity. Render's own free PostgreSQL databases expire after 30 days, so this Blueprint uses an external database instead. See [Render's free-tier limits](https://render.com/docs/free), [Supabase project pausing](https://supabase.com/docs/guides/platform/free-project-pausing), and [Supabase database connection options](https://supabase.com/docs/guides/database/connecting-to-postgres).
+This setup is intended for a portfolio project. Render's own free PostgreSQL databases expire after 30 days, so use an external database for persistent data. See [Render's free-plan limits](https://render.com/docs/free) and [Supabase database connection options](https://supabase.com/docs/guides/database/connecting-to-postgres).
 
 ---
 

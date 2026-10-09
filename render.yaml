@@ -18,7 +18,7 @@ services:
       - key: JPA_DDL_AUTO
         value: validate
       - key: CORS_ALLOWED_ORIGINS
-        value: https://careerpulse-web.onrender.com
+        value: https://careerpulse-web-zrkl.onrender.com
 
   - type: web
     name: careerpulse-web
@@ -32,4 +32,4 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        value: https://careerpulse-api.onrender.com/api
+        value: https://careerpulse-api-t17q.onrender.com/api
