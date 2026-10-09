@@ -1,4 +1,4 @@
-# CareerPulse — Full-Stack Job Application Management Platform
+# CareerPulse - Full-Stack Job Application Management Platform
 
 A full-stack portfolio project for managing a job search, built with **Java 21**, **Spring Boot 3.3.x**, **PostgreSQL**, and **React 18 / Vite**.
 
