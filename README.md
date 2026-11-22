@@ -1,5 +1,5 @@
 # CareerPulse - Full-Stack Job Application Management Platform
-
+ 
 A full-stack portfolio project for managing a job search, built with **Java 21**, **Spring Boot 3.3.x**, **PostgreSQL**, and **React 18 / Vite**.
 
 Includes **21 REST API operations**, four JPA entities, JWT-based authentication, user-scoped data access, PostgreSQL migrations, Docker Compose, and automated backend tests. The backend test suite has **56 passing tests** and **80.05% line coverage**.
